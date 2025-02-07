@@ -1,0 +1,3 @@
+#gitの管理に含めないもの
+node_modules
+*.json
