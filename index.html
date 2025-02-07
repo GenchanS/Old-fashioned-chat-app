@@ -5,15 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>2人用チャット</title>
   <script>
-    const chatId = "chat123";  // 固定のチャットID（実際は動的に変更可）
-    const sender = prompt("あなたの名前を入力してください");
+    const chatId = "chat123";  // 固定のチャットID
+    let sender = "";
+
+    window.onload = function() {
+      sender = prompt("あなたの名前を入力してください") || "匿名";
+      loadMessages();
+      setInterval(loadMessages, 3000); // 3秒ごとに更新
+    };
 
     function sendMessage() {
-      const message = document.getElementById("messageInput").value;
+      const messageInput = document.getElementById("messageInput");
+      const message = messageInput.value.trim();
+      
+      if (!message) return;
+
       google.script.run
         .withSuccessHandler(() => {
-          document.getElementById("messageInput").value = "";
-          loadMessages();
+          messageInput.value = "";  // 送信後に入力フィールドをクリア
+          setTimeout(loadMessages, 500); // 送信後に少し待ってから更新
         })
         .sendMessage(chatId, sender, message);
     }
@@ -25,14 +35,15 @@
           chatBox.innerHTML = messages.map(msg =>
             `<p><strong>${msg.sender}:</strong> ${msg.message}</p>`
           ).join("");
+
+          // 一番下までスクロールする
+          chatBox.scrollTop = chatBox.scrollHeight;
         })
         .getMessages(chatId);
     }
-
-    setInterval(loadMessages, 3000); // 3秒ごとに更新
   </script>
 </head>
-<body onload="loadMessages()">
+<body>
   <h2>2人チャット</h2>
   <div id="chatBox" style="border:1px solid #ccc; height: 300px; overflow-y: scroll; padding: 10px;"></div>
   <input type="text" id="messageInput" placeholder="メッセージを入力">

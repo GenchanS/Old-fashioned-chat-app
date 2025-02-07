@@ -19,6 +19,7 @@ function sendMessage(chatId: string, sender: string, message: string): boolean {
 /**
  * 指定されたチャットIDのメッセージを取得する
  */
+/*
 function getMessages(chatId: string): any[] {
   const sheet = getSheet();
   if (!sheet) return [];
@@ -28,6 +29,22 @@ function getMessages(chatId: string): any[] {
     .filter(row => row[1] === chatId)
     .map(row => ({ timestamp: row[0], sender: row[2], message: row[3] }));
 }
+*/
+
+function getMessages(chatId: string): any[] {
+    const sheet = getSheet();
+    if (!sheet) return [];
+  
+    const data = sheet.getDataRange().getValues();
+  
+    // デバッグログ
+    Logger.log("取得したデータ: " + JSON.stringify(data));
+    
+    // 指定された chatId のメッセージをフィルタリング
+    return data
+      .filter(row => row[1] === chatId)
+      .map(row => ({ timestamp: row[0], sender: row[2], message: row[3] }));
+  }
 
 /**
  * スプレッドシートのシートを取得する

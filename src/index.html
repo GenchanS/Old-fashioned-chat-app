@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>2人用チャット</title>
+  <title>PChat</title>
   <script>
-    const chatId = "chat123";  // 固定のチャットID（実際は動的に変更可）
+    const chatId = "naked snake";  // 固定のチャットID（実際は動的に変更可）
     const sender = prompt("あなたの名前を入力してください");
 
     function sendMessage() {
@@ -21,6 +21,7 @@
     function loadMessages() {
       google.script.run
         .withSuccessHandler(messages => {
+          console.log("受け取ったメッセージ:", messages);  // 受け取ったメッセージをデバッグ出力
           const chatBox = document.getElementById("chatBox");
           chatBox.innerHTML = messages.map(msg =>
             `<p><strong>${msg.sender}:</strong> ${msg.message}</p>`
@@ -33,7 +34,7 @@
   </script>
 </head>
 <body onload="loadMessages()">
-  <h2>2人チャット</h2>
+  <h2>プライベートチャット</h2>
   <div id="chatBox" style="border:1px solid #ccc; height: 300px; overflow-y: scroll; padding: 10px;"></div>
   <input type="text" id="messageInput" placeholder="メッセージを入力">
   <button onclick="sendMessage()">送信</button>
