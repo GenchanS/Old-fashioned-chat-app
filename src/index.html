@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2人用チャット</title>
+  <script>
+    const chatId = "chat123";  // 固定のチャットID（実際は動的に変更可）
+    const sender = prompt("あなたの名前を入力してください");
+
+    function sendMessage() {
+      const message = document.getElementById("messageInput").value;
+      google.script.run
+        .withSuccessHandler(() => {
+          document.getElementById("messageInput").value = "";
+          loadMessages();
+        })
+        .sendMessage(chatId, sender, message);
+    }
+
+    function loadMessages() {
+      google.script.run
+        .withSuccessHandler(messages => {
+          const chatBox = document.getElementById("chatBox");
+          chatBox.innerHTML = messages.map(msg =>
+            `<p><strong>${msg.sender}:</strong> ${msg.message}</p>`
+          ).join("");
+        })
+        .getMessages(chatId);
+    }
+
+    setInterval(loadMessages, 3000); // 3秒ごとに更新
+  </script>
+</head>
+<body onload="loadMessages()">
+  <h2>2人チャット</h2>
+  <div id="chatBox" style="border:1px solid #ccc; height: 300px; overflow-y: scroll; padding: 10px;"></div>
+  <input type="text" id="messageInput" placeholder="メッセージを入力">
+  <button onclick="sendMessage()">送信</button>
+</body>
+</html>
